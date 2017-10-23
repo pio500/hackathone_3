@@ -39,6 +39,7 @@ $(function() {
             $currentInput=$inputMessage.focus();  //키보드 입력포인트를 메세지 입력으로 변경
 
             socket.emit('add user',username);  //서버에게 사용자가 추가됨을 알림.
+            $('.ui-icon').css('z-index','5001');
         }
     }
 
@@ -166,7 +167,7 @@ $(function() {
 
     $window.keydown(function(event) {
        if(!(event.ctrlKey || event.metaKey || event.altKey)) {
-           $currentInput.focus();
+          // $currentInput.focus();
        }
        if(event.which===13) {
            if(username) {
@@ -236,99 +237,151 @@ $(function() {
 
 
     /* Canvas */
+    var cursor = document.getElementById('cursor');
+    cursor.addEventListener('click',onCursor,false);
+    var eraser =  document.getElementById('eraser');
+    eraser.addEventListener('click',onEraser,false);
+    var eraserFlag=false;
+        var ctx;
 
-    var canvas = document.getElementsByClassName('whiteboard')[0];
-    var colors = document.getElementsByClassName('color');
-    var context = canvas.getContext('2d');
+    var COLOURS = [ '#E3EB64', '#A7EBCA', '#FFFFFF', '#D8EBA7', '#868E80' ];
+        var radius = 0;
+  var colors = document.getElementsByClassName('color');
+  var currentX,currentY;
 
     var current = {
-        color: 'black'
+        color: 'black',
+        lineWidth: 2
     };
-    var drawing = false;
 
-    canvas.addEventListener('mousedown', onMouseDown, false);
-    canvas.addEventListener('mouseup', onMouseUp, false);
-    canvas.addEventListener('mouseout', onMouseUp, false);
-    canvas.addEventListener('mousemove', throttle(onMouseMove, 10), false);
+    var drawing = false;
     for (var i = 0; i < colors.length; i++){
         colors[i].addEventListener('click', onColorUpdate, false);
     }
 
+
     socket.on('drawing', onDrawingEvent);
-    window.addEventListener('resize', onResize, false);
-    onResize();
+    socket.on('clearCanvas',clearCanvas);
 
 
-    function drawLine(x0, y0, x1, y1, color, emit){
-        context.beginPath();
-        context.moveTo(x0, y0);
-        context.lineTo(x1, y1);
-        context.strokeStyle = color;
-        context.lineWidth = 2;
-        context.stroke();
-        context.closePath();
 
-        if (!emit) { return; }
-        var w = canvas.width;
-        var h = canvas.height;
+        var canvas=Sketch.create({
+            container: document.getElementById( 'container' ),
+            autoclear: false,
+            retina: 'auto',
 
-        socket.emit('drawing', {
-            x0: x0 / w,
-            y0: y0 / h,
-            x1: x1 / w,
-            y1: y1 / h,
-            color: color
-        });
-    }
+            setup: function() {
+                var s=document.getElementsByClassName(" sketch")[0];
+                s.id="sketch";
+                $('#sketch').css('position','relative');
+                //$('#sketch').css('top','-700px');
+            },
+            // Event handlers
 
-    function onMouseDown(e){
-        drawing = true;
-        current.x = e.clientX;
-        current.y = e.clientY;
-    }
+            keydown: function() {
+                if ( this.keys.C ) {
+                    this.clear();
+                    socket.emit('clearCanvas');
+                }
+            },
 
-    function onMouseUp(e){
-        if (!drawing) { return; }
-        drawing = false;
-        drawLine(current.x, current.y, e.clientX, e.clientY, current.color, true);
-    }
-
-    function onMouseMove(e){
-        if (!drawing) { return; }
-        drawLine(current.x, current.y, e.clientX, e.clientY, current.color, true);
-        current.x = e.clientX;
-        current.y = e.clientY;
-    }
-
-    function onColorUpdate(e){
-            current.color = e.target.className.split(' ')[1];
-    }
-
-    // limit the number of events per second
-    function throttle(callback, delay) {
-        var previousCall = new Date().getTime();
-        return function() {
-            var time = new Date().getTime();
-
-            if ((time - previousCall) >= delay) {
-                previousCall = time;
-                callback.apply(null, arguments);
+            mousedown :function() {                
+                drawing = true;
+                mouse = this.mouse;
+                current.x = mouse.x;
+                current.y = mouse.y;
+            },
+            mousemove :function() {
+                if (!drawing) { return; }
+                mouse = this.mouse;
+                drawLine(current.x, current.y, mouse.x, mouse.y, current.color, true,eraserFlag);
+                current.x = mouse.x;
+               current.y = mouse.y;
+            },
+            mouseup :function() {
+                if (!drawing) { return; }
+                drawing = false;
+                mouse = this.mouse;
+                drawLine(current.x, current.y,mouse.x, mouse.y, current.color, true,eraserFlag);
             }
-        };
-    }
-
+            
+        });
     function onDrawingEvent(data){
         console.log("log");
         var w = canvas.width;
         var h = canvas.height;
-        drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
-    }
-    // make the canvas fill its parent
-    function onResize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color,false,data.eraserFlag);
     }
 
 
+    function onColorUpdate(e){
+            eraserFlag=false;
+            current.color = e.target.className.split(' ')[1];
+            $('#container').css('z-index','2000');
+            $('#container').css('cursor','crosshair');
+            $('#sketch').css('z-index','200');
+
+    }
+
+    function onCursor() {
+        eraserFlag=false;
+        $('#sketch').css('z-index','0');
+         $('#container').css('cursor','default');
+        $('#container').css('z-index','2000');
+        current.color='transparent';
+    }
+    function onEraser() {   
+            current.color='#ff0000';
+            eraserFlag=true;       
+    }
+
+    function clearCanvas(data) {
+        canvas.clear();
+    }
+
+ function drawLine(x0, y0, x1, y1, color, emit,eraser){
+            if(eraser ==false) {
+                canvas.beginPath();
+                canvas.moveTo(x0, y0);
+                canvas.lineTo(x1, y1);
+                canvas.strokeStyle = color;
+                canvas.lineWidth = current.lineWidth;
+                canvas.stroke();
+                canvas.closePath();
+            } else {
+                  canvas.beginPath();
+                  canvas.globalCompositeOperation = "destination-out";   
+                  canvas.arc(x0, y0, 20, 0, Math.PI * 2, false);     
+                  canvas.fill();
+                  canvas.closePath();
+                  canvas.globalCompositeOperation = "source-over";
+            }
+                if (!emit) { return; }
+                var w = canvas.width;
+                var h = canvas.height;
+
+                socket.emit('drawing', {
+                    x0: x0 / w,
+                    y0: y0 / h,
+                    x1: x1 / w,
+                    y1: y1 / h,
+                    color: color,
+                    eraserFlag: eraserFlag
+                });
+    }
+
+  
+
+    //***** chating box controll
+    $('.right-box').css('position','absolute');
+    $('.right-box').css('top','60px');
+    $('.right-box').css('rigsht','10px');
+
+    $('.right-box').draggable();
+    $('.right-box').resizable();
+
+    $('#share').click(function() {
+        console.log( $('#share').is(":checked"));
+    });
 
 });

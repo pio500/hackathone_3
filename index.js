@@ -4,7 +4,7 @@ var express=require('express'),
     url = require('url'),
     mime = require('mime'),
     fs = require('fs'),
-    SocketIOFileUploadServer = require('https://hackaton-prototype.herokuapp.com/fileServer'),
+    SocketIOFileUploadServer = require('./fileServer'),
     //app=express(),
     http=require('http'),
     socketio=require('socket.io'),
@@ -12,7 +12,7 @@ var express=require('express'),
  
 
 var app = http.createServer(function(req, resp){
-  var filename = path.join(__dirname, "https://hackaton-prototype.herokuapp.com/", url.parse(req.url).pathname);
+  var filename = path.join(__dirname, "/", url.parse(req.url).pathname);
   (fs.exists || path.exists)(filename, function(exists){
     if (exists) {
       fs.readFile(filename, function(err, data){
@@ -42,7 +42,7 @@ var app = http.createServer(function(req, resp){
 
 var app = express()
   .use(SocketIOFileUploadServer.router)
-  .use(express.static(__dirname + "https://hackaton-prototype.herokuapp.com/"))
+  .use(express.static(__dirname + "/"))
   .listen(process.env.PORT || 3000);
 
 // app.use(express.static(path.join(__dirname, '/')));
@@ -112,14 +112,45 @@ io.sockets.on('connection',function(socket) {
     socket.on('drawing', function(data) {
           socket.broadcast.emit('drawing',data);
     });
+    socket.on('clearCanvas', function() {
+          socket.broadcast.emit('clearCanvas');
+    });
 
     //youtube 영상 broadcast  
     
     socket.on('youtubeURLreceive', function(data) {
-          socket.emit('youtubeURL',data);
+          //socket.emit('youtubeURL',data);
           socket.broadcast.emit('youtubeURL',data);
-          console.log('execute'+data);
     });
+    socket.on('videoDrag',function(data) {
+          socket.broadcast.emit('videoDrag',data);
+    });
+    socket.on('videoResize',function(data) {
+          socket.broadcast.emit('videoResize',data);
+    });
+
+    socket.on('videoRemove',function(data) {
+          socket.broadcast.emit('videoRemove',data);
+    });
+
+    // 문서 broadast
+
+    socket.on('documentURL', function(data) {
+          //socket.emit('youtubeURL',data);
+          socket.broadcast.emit('documentURL',data);
+    });
+    socket.on('documentDrag',function(data) {
+          socket.broadcast.emit('documentDrag',data);
+    });
+    socket.on('documentResize',function(data) {
+          socket.broadcast.emit('documentResize',data);
+    });
+
+    socket.on('documentRemove',function(data) {
+          socket.broadcast.emit('documentRemove',data);
+    });
+
+
 
     //파일 업로드 부분
   var siofuServer = new SocketIOFileUploadServer();
@@ -127,7 +158,7 @@ io.sockets.on('connection',function(socket) {
       //console.log(event.file);
       console.log(event.file.name);
       event.file.clientDetail.base = event.file.base;
-      var filename='https://hackaton-prototype.herokuapp.com/uploads/'+event.file.name;
+      var filename='./uploads/'+event.file.name;
       streamTrans(filename);
 
     });
@@ -142,16 +173,32 @@ io.sockets.on('connection',function(socket) {
         siofuServer.abort(event.file.id, socket);
       }
     });
-    siofuServer.dir = "https://hackaton-prototype.herokuapp.com/uploads";
-    siofuServer.maxFileSize = 200000;
+    siofuServer.dir = "./uploads";
+    siofuServer.maxFileSize = 20000000;
     siofuServer.listen(socket);
+
+    socket.on('imageDrag',function(data) {
+          socket.broadcast.emit('imageDrag',data);
+    });
+    socket.on('imageResize',function(data) {
+          socket.broadcast.emit('imageResize',data);
+    });
+
+    socket.on('imageRemove',function(data) {
+          socket.broadcast.emit('imageRemove',data);
+    });
+
 
     function streamTrans(filename) {
          fs.readFile(filename, function(err, data){
           socket.broadcast.emit('imageConversionByClient', { image: true, buffer: data });
           //socket.broadcast.emit('imageConversionByServer', "data:image/png;base64,"+ data.toString("base64"));
-  });
+      });
     }
+
+    socket.on('flowchartdraw',function(data) {
+      socket.broadcast.emit('flowchartdraw',data);
+    });
 
 
 });

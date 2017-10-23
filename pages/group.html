@@ -8,54 +8,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>AdminLTE 2 | Starter</title>
-
     <link rel='stylesheet' href='../dist/css/style.css' />
+    
+ <script src="../dist/js/go.js"></script>
+  <!--  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>-->
 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://hackaton-prototype.herokuapp.com/socket.io/socket.io.js"></script>
+<link rel="stylesheet" href="./jquery.contextMenu.css" type="text/css" media="screen">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript" src="./jquery.contextMenu.js"></script>
+ <script type="text/javascript" src="./jquery.ui.position.js"></script>
+ <link rel="stylesheet" href="./jquery-ui.css">
+
+    <script src="/socket.io/socket.io.js"></script>
 <script src="../dist/js/main.js"></script>
+<script src="../dist/js/sketch.js"></script>
+  
     <style>
-        .center-box {
-            float: left;
-            width: 70%;
-        }
-        .right-box {
-            float: right;
-            width: 30%;
-        }
-        .example-modal .modal {
-      position: relative;
-      top: auto;
-      bottom: auto;
-      right: auto;
-      left: auto;
-      display: block;
-      z-index: 1;
-    }
-    .example-modal .modal {
-      background: transparent !important;
-    }
-.flashs{
-  position: fixed;
-  left: 0;
-  width: 100%;
-  height: 20px;
-  top: 0;
-  background-color: #3AC8DE;
-  box-shadow: 0 0 6px 6px #3AC8DE;
-  text-align: center;
-  font-size: 20px;
-}
-#ul_form{
-  display: none;
-}
-#file_drop{
-  width: 100px;
-  height: 100px;
-  font-size: 20px;
-  text-align: center;
-   background-color: #3AC8DE;
-}
+       
 
     </style>
   <!-- Tell the browser to be responsive to screen width -->
@@ -72,7 +42,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect.
   -->
-  <link rel="stylesheet" href="../dist/css/skins/skin-blue.min.css">
+  <link rel="stylesheet" href="../dist/css/skins/skin-yellow.min.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -101,7 +71,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-yellow sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->
@@ -110,13 +80,13 @@ desired effect
     <!-- Logo -->
     <a href="../index.html" class="logo">
       <span class="logo-mini"><b>P</b>C</span>
-      <span class="logo-lg"><b>PEANUT</b>CHAT</span>
+      <span class="logo-lg"><b>우 끼 프</b></span>
     </a>
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
       <!-- Sidebar toggle button-->
-      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <a href="#" id="zzzz" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
       <!-- Navbar Right Menu -->
@@ -310,7 +280,7 @@ desired effect
       <ul class="sidebar-menu">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="../pages/group.html"><i class="fa fa-link"></i> <span>PeaNut</span></a></li>
+        <li class="active"><a href="../pages/group.html"><i class="fa fa-link"></i> <span>실시간 회의</span></a></li>
         
       </ul>
       <!-- /.sidebar-menu -->
@@ -321,44 +291,93 @@ desired effect
 
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-
-       
+  <div class="content-wrapper" style="height:700px; width:95%; margin-right: 15px;">       
 
      <div class="center-box" id="canvas">
 
+
 <!-- 그림판 기능 -->
-          <canvas class="whiteboard" style="z-index: 200;" ></canvas>
 
-
-       <div class="colors">
+       <div class="colors panel panel-warning">
+              <img id="cursor" src="../dist/img/cursor.png">
               <div class="color black"></div>
               <div class="color red"></div>
               <div class="color green"></div>
               <div class="color blue"></div>
               <div class="color yellow"></div>
-          </div>
-              
+              <img id="eraser" src="../dist/img/eraser.png">
 
+        <input class="inputYoutubeURL" placeholder="Input youtube URL here..." style="position: relative; left: 5px; top:-9px; width:110px; height:27px"/>
+        <button class="btn btn-danger" onclick="createVideo()" style="position: relative; top:-10px; left: 6px;">Youtube</button>
+        <input class="inputDocumentURL" placeholder="Input youtube URL here..." style="position: relative; left: 15px; top:-9px; width:110px; height:27px"/>
+        <button class="btn btn-primary" onclick="createDoc()" style="position: relative; top:-10px; left: 15px;">Document</button>
 
+        <div id="inputBtns" class="btn" style="position: relative; top:-10px; left: 10px;">
+            <button id="ul_btn" class="btn btn-warning">Image</button>
 
-        <img id="img" width="70%" height="80%"><p>
+            <input type="file" style="display:none;" id="plain_input_element"/>
 
-        <div id="inputBtns">
-            <button id="ul_btn" style="display:none;">Select File</button>
-
-            <input type="file" id="plain_input_element"/>
-
-            <div id="file_drop" dropzone="copy" title="drop files for upload">drop file here</div>
-            
-            <input class="inputYoutubeURL" placeholder="Input youtube URL here..."/>
-            <button onclick="sendYoutubeURL()">Youtube</button>
+            <div id="file_drop" style="display:none;" dropzone="copy" title="drop files for upload">drop file here</div>    
         </div>
 
-        <iframe id="youtubeFrame" width="420" height="345" ></iframe>
-       
+      </div>
+
+      <!--<div style="position:relative; width:53.5%; top:-79px; left:300px; padding: 5px;" class="panel panel-warning">
+        <input class="inputYoutubeURL" placeholder="Input youtube URL here..."/>
+        <button class="btn btn-danger" onclick="createVideo()">Youtube</button>
+
+        <div id="inputBtns" class="btn">
+            <button id="ul_btn" class="btn btn-default">Select File</button>
+
+            <input type="file" style="display:none;" id="plain_input_element"/>
+
+            <div id="file_drop" style="display:none;" dropzone="copy" title="drop files for upload">drop file here</div>    
+        </div>
+      </div>-->
+
+           <!-- <canvas id="container" class="whiteboard"  width="600" height="500" style="z-index: 200;" ></canvas>-->
+        <span id="palette" class="panel panel-success">
+          <div id="heads" class="panel-heading">Option</div>
+            <div id="myPaletteDiv" style="height: 600px"></div>
+        </span>
+
+        <span id="Diagram" class="panel panel-success">
+          <div id="heads" class="panel-heading">Canvas</div>
+          <div id="myDiagramDiv" style=" height:700px;
+          z-index: 500; cursor:pointer;" ></div>
+          <div id="container" style="position: relative; top: -700px; left: 0; width:95%; height: 500px; z-index: 1000;" class="whiteboard"></div>
+        </span>
+
+          <!--<div id="container" class="whiteboard"></div>-->
+
+
+
+<div id="layer1" class="pop-layer panel panel-warning" style="z-index: 5000;">
+    <div class="pop-container">
+        <div class="pop-conts">
+            <!--content //-->
+            <a>width : </a> <input id="width" type="text"><p>
+            <a>height : </a> <input id="height" type="text">
+            </div>
+            <div class="btn-r">
+                <a href="#" class="btn-layerAccept">적용</a>
+                <a href="#" class="btn-layerClose">닫기</a>
+            </div>
+            <!--// content-->
+        </div>
+    </div>
+</div>
+
 
        <script>
+var layer=0;
+var imageNum=0;
+var docNum=0;
+var width, height;
+
+var $canvas=$('#container');
+var $inputDocumentURL=$('.inputDocumentURL');
+
 
     //이미지 로드
 function b64(e){var t="";var n=new Uint8Array(e);var r=n.byteLength;for(var i=0;i<r;i++){t+=String.fromCharCode(n[i])}return window.btoa(t)}
@@ -368,25 +387,823 @@ function b64(e){var t="";var n=new Uint8Array(e);var r=n.byteLength;for(var i=0;
     var $inputYoutubeURL=$('.inputYoutubeURL');
 
     socket.on('imageConversionByClient', function(data) {
-      console.log('execute');
-        $("#img").attr("src","data:image/png;base64,"+b64(data.buffer));
-      });
+        createImage(data);
+    });
+ socket.on('imageDrag',function(data) {
+        $('#'+data.id).offset({top: data.top,left: data.left});
+    });
+    socket.on('imageResize',function(data) {
+        $('#'+data.id).css('width',data.width);
+       $('#'+data.id).css('height',data.height);
+    });
+
+    socket.on('imageRemove',function(data) {
+      $(data).remove();
+    });
 
 
 //동영상 로드
     socket.on('youtubeURL',function(data) { 
-      $("#youtubeFrame").attr("src",data+"?rel=0&autoplay=1");
+      createVideo(data);
+    });  
+    socket.on('videoDrag',function(data) {
+        $('#'+data.id).offset({top: data.top,left: data.left});
+    });
+    socket.on('videoResize',function(data) {
+        $('#'+data.id).css('width',data.width);
+       $('#'+data.id).css('height',data.height);
     });
 
-    function sendYoutubeURL() {
-        var url=$inputYoutubeURL.val();   
-        if(url) {         
-            $inputYoutubeURL.val(''); 
-            socket.emit('youtubeURLreceive',url);  
-            //$currentInput=$inputMessage.focus();
+    socket.on('videoRemove',function(data) {
+      $(data).remove();
+    });
+
+//****** 문서 로드
+    socket.on('documentURL',function(data) { 
+      createDoc(data);
+    });  
+    socket.on('documentDrag',function(data) {
+        $('#'+data.id).offset({top: data.top,left: data.left});
+    });
+    socket.on('documentResize',function(data) {
+        $('#'+data.id).css('width',data.width);
+       $('#'+data.id).css('height',data.height);
+    });
+
+    socket.on('documentRemove',function(data) {
+      $(data).remove();
+    });
+
+
+$('.btn-example').click(function(){
+        var $href = $(this).attr('href');
+        layer_popup($href);
+    });
+    function layer_popup(select){
+        el='#layer1';
+        var $el = $(el);        //레이어의 id를 $el 변수에 저장
+        var isDim = $el.prev().hasClass('dimBg');   //dimmed 레이어를 감지하기 위한 boolean 변수
+
+        isDim ? $('.dim-layer').fadeIn() : $el.fadeIn();
+
+        var $elWidth = ~~($el.outerWidth()),
+            $elHeight = ~~($el.outerHeight()),
+            docWidth = $(document).width(),
+            docHeight = $(document).height();
+
+        // 화면의 중앙에 레이어를 띄운다.
+        if ($elHeight < docHeight || $elWidth < docWidth) {
+            $el.css({
+                marginTop: -$elHeight /2,
+                marginLeft: -$elWidth/2
+            })
+        } else { 
+            $el.css({top: 0, left: 0});
         }
+        $el.find('a.btn-layerAccept').click(function(){
+            width=$('#width').val();
+            height=$('#height').val();
+            $(select).css('width',width+'px');
+            $(select).css('height',height+'px');
+            $('#width').val("");
+            $('#height').val("");
+            isDim ? $('.dim-layer').fadeOut() : $el.fadeOut(); // 닫기 버튼을 클릭하면 레이어가 닫힌다.
+            return false;
+        });
+
+
+        $el.find('a.btn-layerClose').click(function(){
+            isDim ? $('.dim-layer').fadeOut() : $el.fadeOut(); // 닫기 버튼을 클릭하면 레이어가 닫힌다.
+            return false;
+        });
+
+        $('.layer .dimBg').click(function(){
+            $('.dim-layer').fadeOut();
+            return false;
+        });
+
+    }
+var position={
+      left:0, top:0,
+      id:""
+   }
+   var size={
+    height:0,
+    width:0,
+    id:""
+   }
+
+
+function createVideo(data) {
+  var url=$inputYoutubeURL.val();
+  if(url=="" && data==undefined) return;
+  var urlAux = url.split('=');
+  var parse = urlAux[1];   
+
+  var div=document.createElement("div");
+  var div_id="dragger"+layer;
+  div.id=div_id;
+
+  document.getElementById("container").appendChild(div);
+ //document.body.appendChild(div);
+
+  var span = document.createElement("iframe");
+  var id = "youtubeFrame"+layer;
+  if(data!=undefined) {
+    var src="https://www.youtube.com/embed/"+data+"?rel=0&enablejsapi=1";
+  } else { 
+    var src="https://www.youtube.com/embed/"+parse+"?rel=0&enablejsapi=1";
+  }
+  span.id = id;
+  span.src=src;
+  document.getElementById("dragger"+layer).appendChild(span);
+   $('#youtubeFrame'+layer).css('width','100%');
+   $('#youtubeFrame'+layer).css('height','90%');
+   $('#youtubeFrame'+layer).css('marginTop','15px');
+   $('#youtubeFrame'+layer).css('margin-left','5px');
+   $('#youtubeFrame'+layer).css('margin-right','5px');
+   $('#youtubeFrame'+layer).css('margin-bottom','10px');
+     $('#youtubeFrame'+layer).attr('frameborder',0);
+
+   $('#dragger'+layer).css('width','344px');
+   $('#dragger'+layer).css('height','209px');
+   $('#dragger'+layer).css('z-index','100');
+   $('#dragger'+layer).css('position','absolute');
+   $('#dragger'+layer).css('top','0px');
+   $('#dragger'+layer).css('background-color','#b0b0b0');
+   //$('#sketch').css('z-index','2000');
+   
+
+  $('#dragger'+layer).draggable({
+    iframeFix:true,
+    drag: function(event,ui) {
+      position.left=ui.offset.left;
+      position.top=ui.offset.top;
+      position.id=this.id;
+        socket.emit('videoDrag',position);
+    }
+  });
+  $('#dragger'+layer).resizable({
+    resize: function(event,ui) {
+      size.height=ui.size.height;
+      size.width=ui.size.width;
+      size.id=this.id;
+        socket.emit('videoResize',size);
     }
 
+  });
+  $('#dragger'+layer).find('.ui-resizable-handle').css('z-index','1500');
+  
+  $.contextMenu({
+            selector: '#dragger'+layer, 
+            callback: function(key, options) {
+              console.log(options);
+              console.log(options.selector);
+              if(key=="delete") { 
+                 $(options.selector).remove();
+                 socket.emit('videoRemove',options.selector);
+                 layer--;
+              } else if(key=="resize") {
+                var flag=layer_popup(options.selector);
+                if(flag==false) {
+                  $(options.selector).css('width',width+'px');
+                  $(options.selector).css('height',height+'px');
+                }
+              }
+            },
+            items: {
+                "delete": {name: "Delete", icon: "delete"},
+                "resize": {name: "Resize", icon: "resize"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });        
+   $inputYoutubeURL.val(''); 
+   $canvas.css('z-index','2000'); 
+   if(data==undefined)
+      socket.emit('youtubeURLreceive',parse);  
+           
+  layer++;
+}
+
+function createImage(data) { 
+
+  var div=document.createElement("div");
+  var div_id="image_div"+imageNum;
+  div.id=div_id;
+
+  document.getElementById("container").appendChild(div);
+
+  var img = document.createElement("img");
+  var id = "img"+imageNum;
+  img.id = id;
+  document.getElementById("image_div"+imageNum).appendChild(img);
+  $("#img"+imageNum).attr("src","data:image/png;base64,"+b64(data.buffer));
+
+   $('#img'+imageNum).css('width','100%');
+   $('#img'+imageNum).css('height','90%');
+   $('#img'+imageNum).css('marginTop','15px');
+   $('#img'+imageNum).css('margin-bottom','10px');
+   
+   $('#image_div'+imageNum).css('width','344px');
+   $('#image_div'+imageNum).css('height','209px');
+   $('#image_div'+imageNum).css('z-index','100');
+   $('#image_div'+imageNum).css('position','absolute');
+   $('#image_div'+imageNum).css('top','0px');
+   $('#image_div'+imageNum).css('background-color','#b0b0b0');
+
+   //$('#sketch').css('z-index','2000');
+  $('#image_div'+imageNum).draggable({
+    iframeFix:true,
+     drag: function(event,ui) {
+      position.left=ui.offset.left;
+      position.top=ui.offset.top;
+      position.id=this.id;
+      socket.emit('imageDrag',position);
+    }
+  });
+  $('#image_div'+imageNum).resizable({
+    resize: function(event,ui) {
+      size.height=ui.size.height;
+      size.width=ui.size.width;
+      size.id=this.id;
+      socket.emit('imageResize',size);
+    }
+  });
+  $('#image_div'+imageNum).find('.ui-resizable-handle').css('z-index','1500');
+  
+  $.contextMenu({
+            selector: '#image_div'+imageNum, 
+            callback: function(key, options) {
+              console.log(options);
+              console.log(options.selector);
+              if(key=="delete") { 
+                 $(options.selector).remove();
+                 socket.emit('imageRemove',options.selector);
+                 layer--;
+              } else if(key=="resize") {
+                var flag=layer_popup(options.selector);
+                if(flag==false) {
+                  $(options.selector).css('width',width+'px');
+                  $(options.selector).css('height',height+'px');
+                }
+              }
+            },
+            items: {
+                "delete": {name: "Delete", icon: "delete"},
+                "resize": {name: "Resize", icon: "resize"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });
+  $canvas.css('z-index','2000'); 
+  imageNum++;
+}
+
+function createDoc(data) {  
+  var url=$inputDocumentURL.val();
+  if(url=="" && data==undefined) return;
+  var urlAux = url.split('/');
+  var parse = urlAux[5];   
+  console.log(parse);
+
+  var div=document.createElement("div");
+  var div_id="documentDiv"+docNum;
+  div.id=div_id;
+
+  document.getElementById("container").appendChild(div);
+ //document.body.appendChild(div);
+
+  var span = document.createElement("iframe");
+  var id = "document"+docNum;
+  if(data!=undefined) {
+    var src="http://docs.google.com/gview?a=v&pid=explorer&chrome=false&api=true&embedded=true&srcid="+data+"&hl=en&embedded=true";
+  } else { 
+    var src="http://docs.google.com/gview?a=v&pid=explorer&chrome=false&api=true&embedded=true&srcid="+parse+"&hl=en&embedded=true";
+  }
+  span.id = id;
+  span.src=src;  
+  document.getElementById("documentDiv"+docNum).appendChild(span);
+
+   $('#document'+docNum).css('width','100%');
+   $('#document'+docNum).css('height','90%');
+   $('#document'+docNum).css('marginTop','15px');
+   $('#document'+docNum).css('margin-left','5px');
+   $('#document'+docNum).css('margin-right','5px');
+   $('#document'+docNum).css('margin-bottom','10px');
+     $('#document'+docNum).attr('frameborder',0);
+
+   $('#documentDiv'+docNum).css('width','650');
+   $('#documentDiv'+docNum).css('height','430');
+   $('#documentDiv'+docNum).css('z-index','100');
+   $('#documentDiv'+docNum).css('position','absolute');
+   $('#documentDiv'+docNum).css('top','0px');
+   $('#documentDiv'+docNum).css('background-color','#b0b0b0');
+    $('#documentDiv'+docNum).css('z-index','1');
+   
+
+  $('#documentDiv'+docNum).draggable({
+    iframeFix:true,
+    drag: function(event,ui) {
+      position.left=ui.offset.left;
+      position.top=ui.offset.top;
+      position.id=this.id;
+      socket.emit('documentDrag',position);
+    }
+  });
+  $('#documentDiv'+docNum).resizable({
+    resize: function(event,ui) {
+      size.height=ui.size.height;
+      size.width=ui.size.width;
+      size.id=this.id;
+      socket.emit('documentResize',size);
+    }
+
+  });
+  $('#documentDiv'+docNum).find('.ui-resizable-handle').css('z-index','1500');
+  
+  $.contextMenu({
+            selector: '#documentDiv'+docNum, 
+            callback: function(key, options) {
+              console.log(options);
+              console.log(options.selector);
+              if(key=="delete") { 
+                 $(options.selector).remove();
+                 socket.emit('documentRemove',options.selector);
+                 layer--;
+              } else if(key=="resize") {
+                var flag=layer_popup(options.selector);
+                if(flag==false) {
+                  $(options.selector).css('width',width+'px');
+                  $(options.selector).css('height',height+'px');
+                }
+              }
+            },
+            items: {
+                "delete": {name: "Delete", icon: "delete"},
+                "resize": {name: "Resize", icon: "resize"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });        
+   //$inputYoutubeURL.val(''); 
+   $canvas.css('z-index','2000'); 
+   if(data==undefined)
+      socket.emit('documentURL',parse);  
+           
+  docNum++;
+}
+/*
+$(".draggable").draggable({
+    iframeFix: true
+    //drag: function(event,ui) {
+    //  console.log(ui.offset);}
+});
+
+$("#drag").resizable({
+   iframeFix: true
+});
+
+$('.btn-drag, .btn-play').click(function(){
+    if($(this).hasClass('btn-drag')){
+    $('.btn-drag').addClass('active');
+    $('.btn-play').removeClass('active');
+    $('#frame').css('pointer-events','none');
+  }
+  else{
+    $('.btn-drag').removeClass('active');
+    $('.btn-play').addClass('active');
+    $('#frame').css('pointer-events','auto');
+  }
+});
+
+document.addEventListener("keydown", function (e) {  
+  if(!e.keyCode === 39){
+    return false;
+  }
+  if($('#frame').css('pointer-events') === 'auto'){
+    $('.btn-drag, .btn-play').toggleClass('active');
+    $('#frame').css('pointer-events','none');
+  }
+  else{
+    $('.btn-play, .btn-drag').toggleClass('active');
+    $('#frame').css('pointer-events','auto');
+  }
+});
+*/
+
+init();
+
+ function init() {
+    //var socket=io();
+
+    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+    var $ = go.GraphObject.make;  // for conciseness in defining templates
+
+    myDiagram =
+      $(go.Diagram, "myDiagramDiv",//"myDiagramDiv",  // must name or refer to the DIV HTML element
+        {
+          initialContentAlignment: go.Spot.TopCenter,
+          allowDrop: true,  // must be true to accept drops from the Palette
+          "LinkDrawn": showLinkLabel,  // this DiagramEvent listener is defined below
+          "LinkRelinked": showLinkLabel,
+          "animationManager.isEnabled": false,
+          "undoManager.isEnabled": true,  // enable undo & redo
+          "commandHandler.archetypeGroupData": { text: "Group", isGroup: true, color: "blue" },
+          "allowVerticalScroll": false
+        });
+
+
+    // when the document is modified, add a "*" to the title and enable the "Save" button
+    myDiagram.addDiagramListener("Modified", function(e) {
+      var button = document.getElementById("SaveButton");
+      if (button) button.disabled = !myDiagram.isModified;
+      var idx = document.title.indexOf("*");
+      if (myDiagram.isModified) {
+        if (idx < 0) document.title += "*";
+      } else {
+        if (idx >= 0) document.title = document.title.substr(0, idx);
+      }
+    });
+
+
+
+  /* myDiagram.model.addChangedListener(function(e) {
+      console.log("safd");
+      socket.emit('flowchartdraw', myDiagram.model.toJson());
+    });*/
+
+ myDiagram.addModelChangedListener(function(evt) {
+  
+    // ignore unimportant Transaction events
+    if (!evt.isTransactionFinished) return;
+
+    var txn = evt.object;  // a Transaction
+    if (txn === null) return;
+    // iterate over all of the actual ChangedEvents of the Transaction
+      
+    txn.changes.each(function(e) {
+      socket.emit('flowchartdraw', myDiagram.model.toJson());
+      // ignore any kind of change other than adding/removing a node
+      if (e.modelChange !== "nodeDataArray") return;
+      // record node insertions and removals
+      if (e.change === go.ChangedEvent.Insert) {
+        console.log(evt.propertyName + " added node with key: " + e.newValue.key);
+      } else if (e.change === go.ChangedEvent.Remove) {
+        console.log(evt.propertyName + " removed node with key: " + e.oldValue.key);
+      }
+    });
+  });
+
+    // helper definitions for node templates
+
+    function nodeStyle() {
+      return [
+        {contextMenu: partContextMenu },
+        // The Node.location comes from the "loc" property of the node data,
+        // converted by the Point.parse static method.
+        // If the Node.location is changed, it updates the "loc" property of the node data,
+        // converting back using the Point.stringify static method.
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        {
+          // the Node.location is at the center of each node
+          //locationSpot: go.Spot.Center,
+          //isShadowed: true,
+          //shadowColor: "#888", myDiagramDiv
+          // handle mouse enter/leave events to show/hide the ports 
+          mouseEnter: function (e, obj) { showPorts(obj.part, true); 
+            $canvas.css('z-index','10');  },
+          mouseLeave: function (e, obj) { showPorts(obj.part, false); }
+          
+        }
+      ];
+    }
+     // To simplify this code we define a function for creating a context menu button:
+    function makeButton(text, action, visiblePredicate) {
+      return $("ContextMenuButton",
+               $(go.TextBlock, text),
+               { click: action },
+               // don't bother with binding GraphObject.visible if there's no predicate
+               visiblePredicate ? new go.Binding("visible", "", function(o, e) { return o.diagram ? visiblePredicate(o, e) : false; }).ofObject() : {});
+    }
+
+    function groupInfo(adornment) {  // takes the tooltip or context menu, not a group node data object
+      var g = adornment.adornedPart;  // get the Group that the tooltip adorns
+      var mems = g.memberParts.count;
+      var links = 0;
+      g.memberParts.each(function(part) {
+        if (part instanceof go.Link) links++;
+      });
+      return "Group " + g.data.key + ": " + g.data.text + "\n" + mems + " members including " + links + " links";
+    }
+
+       myDiagram.groupTemplate =
+      $(go.Group, "Vertical",
+        { selectionObjectName: "PANEL",  // selection handle goes around shape, not label
+          ungroupable: true },  // enable Ctrl-Shift-G to ungroup a selected Group
+        $(go.TextBlock,
+          {
+            font: "bold 19px sans-serif",
+            isMultiline: false,  // don't allow newlines in text
+            editable: true  // allow in-place editing by user
+          },
+          new go.Binding("text", "text").makeTwoWay(),
+          new go.Binding("stroke", "color")),
+        $(go.Panel, "Auto",
+          { name: "PANEL" },
+          $(go.Shape, "Rectangle",  // the rectangular shape around the members
+            {
+              fill: "rgba(128,128,128,0.2)", stroke: "gray", strokeWidth: 3,
+              portId: "", cursor: "pointer",  // the Shape is the port, not the whole Node
+              // allow all kinds of links from and to this port
+              fromLinkable: true, fromLinkableSelfNode: true, fromLinkableDuplicates: true,
+              toLinkable: true, toLinkableSelfNode: true, toLinkableDuplicates: true
+            }),
+          $(go.Placeholder, { margin: 10, background: "transparent" })  // represents where the members are
+        ),
+        { // this tooltip Adornment is shared by all groups
+          toolTip:
+            $(go.Adornment, "Auto",
+              $(go.Shape, { fill: "#FFFFCC" }),
+              $(go.TextBlock, { margin: 4 },
+                // bind to tooltip, not to Group.data, to allow access to Group properties
+                new go.Binding("text", "", groupInfo).ofObject())
+            ),
+          // the same context menu Adornment is shared by all groups
+          contextMenu: partContextMenu
+        }
+      );
+
+     var partContextMenu =
+      $(go.Adornment, "Vertical",
+          makeButton("Properties",
+                     function(e, obj) {  // OBJ is this Button
+                       var contextmenu = obj.part;  // the Button is in the context menu Adornment
+                       var part = contextmenu.adornedPart;  // the adornedPart is the Part that the context menu adorns
+                       // now can do something with PART, or with its data, or with the Adornment (the context menu)
+                       if (part instanceof go.Link) alert(linkInfo(part.data));
+                       else if (part instanceof go.Group) alert(groupInfo(contextmenu));
+                       else alert(nodeInfo(part.data));
+                     }),
+          makeButton("Cut",
+                     function(e, obj) { e.diagram.commandHandler.cutSelection(); },
+                     function(o) { return o.diagram.commandHandler.canCutSelection(); }),
+          makeButton("Copy",
+                     function(e, obj) { e.diagram.commandHandler.copySelection(); },
+                     function(o) { return o.diagram.commandHandler.canCopySelection(); }),
+          makeButton("Paste",
+                     function(e, obj) { e.diagram.commandHandler.pasteSelection(e.diagram.lastInput.documentPoint); },
+                     function(o) { return o.diagram.commandHandler.canPasteSelection(); }),
+          makeButton("Delete",
+                     function(e, obj) { e.diagram.commandHandler.deleteSelection(); },
+                     function(o) { return o.diagram.commandHandler.canDeleteSelection(); }),
+          makeButton("Undo",
+                     function(e, obj) { e.diagram.commandHandler.undo(); },
+                     function(o) { return o.diagram.commandHandler.canUndo(); }),
+          makeButton("Redo",
+                     function(e, obj) { e.diagram.commandHandler.redo(); },
+                     function(o) { return o.diagram.commandHandler.canRedo(); }),
+          makeButton("Group",
+                     function(e, obj) { e.diagram.commandHandler.groupSelection(); },
+                     function(o) { return o.diagram.commandHandler.canGroupSelection(); }),
+          makeButton("Ungroup",
+                     function(e, obj) { e.diagram.commandHandler.ungroupSelection(); },
+                     function(o) { return o.diagram.commandHandler.canUngroupSelection(); })
+      );
+
+      function nodeInfo(d) {  // Tooltip info for a node data object
+      var str = "Node " + d.key + ": " + d.text + "\n";
+      if (d.group)
+        str += "member of " + d.group;
+      else
+        str += "top-level node";
+      return str;
+    }
+
+
+    // Define a function for creating a "port" that is normally transparent.
+    // The "name" is used as the GraphObject.portId, the "spot" is used to control how links connect
+    // and where the port is positioned on the node, and the boolean "output" and "input" arguments
+    // control whether the user can draw links from or to the port.
+    function makePort(name, spot, output, input) {
+      // the port is basically just a small circle that has a white stroke when it is made visible
+      console.log("dfa");
+      return $(go.Shape, "Circle",
+               {
+
+                  fill: "transparent",
+                  stroke: null,  // this is changed to "white" in the showPorts function
+                  desiredSize: new go.Size(8, 8),
+                  alignment: spot, alignmentFocus: spot,  // align the port on the main Shape
+                  portId: name,  // declare this object to be a "port"
+                  fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
+                  fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
+                  cursor: "pointer"  // show a different cursor to indicate potential link point
+               });
+    }
+  myDiagram.contextMenu =
+      $(go.Adornment, "Vertical",
+          makeButton("Paste",
+                     function(e, obj) { e.diagram.commandHandler.pasteSelection(e.diagram.lastInput.documentPoint); },
+                     function(o) { return o.diagram.commandHandler.canPasteSelection(); }),
+          makeButton("Undo",
+                     function(e, obj) { e.diagram.commandHandler.undo(); },
+                     function(o) { return o.diagram.commandHandler.canUndo(); }),
+          makeButton("Redo",
+                     function(e, obj) { e.diagram.commandHandler.redo(); },
+                     function(o) { return o.diagram.commandHandler.canRedo(); })
+      );
+    // define the Node templates for regular nodes
+
+    var lightText = 'whitesmoke';
+
+    myDiagram.nodeTemplateMap.add("",  // the default category
+      $(go.Node, "Spot", nodeStyle(),
+        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+        $(go.Panel, "Auto",
+          $(go.Shape, "Rectangle",
+            { fill: "#00A9C9", stroke: null },
+            new go.Binding("figure", "figure")),
+          $(go.TextBlock,
+            {
+              font: "bold 11pt Helvetica, Arial, sans-serif",
+              stroke: lightText,
+              margin: 8,
+              maxSize: new go.Size(160, NaN),
+              wrap: go.TextBlock.WrapFit,
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
+        ),
+        // four named ports, one on each side:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, true),
+        makePort("R", go.Spot.Right, true, true),
+        makePort("B", go.Spot.Bottom, true, false)
+      ));
+
+    myDiagram.nodeTemplateMap.add("Start",
+      $(go.Node, "Spot", nodeStyle(),
+        $(go.Panel, "Auto",
+          $(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#79C900", stroke: null }),
+          $(go.TextBlock, "Start",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false),
+
+      ));
+
+    myDiagram.nodeTemplateMap.add("End",
+      $(go.Node, "Spot", nodeStyle(),
+        $(go.Panel, "Auto",
+          $(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#DC3C00", stroke: null }),
+          $(go.TextBlock, "End",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the bottom, all input only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, false, true),
+        makePort("R", go.Spot.Right, false, true)
+      ));
+
+    myDiagram.nodeTemplateMap.add("Comment",
+      $(go.Node, "Auto", nodeStyle(),
+        $(go.Shape, "File",
+          { fill: "#EFFAB4", stroke: null }),
+        $(go.TextBlock,
+          {
+            margin: 5,
+            maxSize: new go.Size(200, NaN),
+            wrap: go.TextBlock.WrapFit,
+            textAlign: "center",
+            editable: true,
+            font: "bold 12pt Helvetica, Arial, sans-serif",
+            stroke: '#454545'
+          },
+          new go.Binding("text").makeTwoWay())
+        // no ports, because no links are allowed to connect with a comment
+      ));
+    // replace the default Link template in the linkTemplateMap
+    myDiagram.linkTemplate =
+      $(go.Link,  // the whole link panel
+        {
+          routing: go.Link.AvoidsNodes,
+          curve: go.Link.JumpOver,
+          corner: 5, toShortLength: 4,
+          relinkableFrom: true,
+          relinkableTo: true,
+          reshapable: true,
+          resegmentable: true,
+          // mouse-overs subtly highlight links:
+          mouseEnter: function(e, link) { link.findObject("HIGHLIGHT").stroke = "rgba(30,144,255,0.2)"; },
+          mouseLeave: function(e, link) { link.findObject("HIGHLIGHT").stroke = "transparent"; }
+        },
+        new go.Binding("points").makeTwoWay(),
+        $(go.Shape,  // the highlight shape, normally transparent
+          { isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT" }),
+        $(go.Shape,  // the link path shape
+          { isPanelMain: true, stroke: "gray", strokeWidth: 2 }),
+        $(go.Shape,  // the arrowhead
+          { toArrow: "standard", stroke: null, fill: "gray"}),
+        $(go.Panel, "Auto",  // the link label, normally not visible
+          { visible: false, name: "LABEL", segmentIndex: 2, segmentFraction: 0.5},
+          new go.Binding("visible", "visible").makeTwoWay(),
+          $(go.Shape, "RoundedRectangle",  // the label shape
+            { fill: "#F8F8F8", stroke: null }),
+          $(go.TextBlock, "Yes",  // the label
+            {
+              textAlign: "center",
+              font: "10pt helvetica, arial, sans-serif",
+              stroke: "#333333",
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
+        )
+      );
+
+    // Make link labels visible if coming out of a "conditional" node.
+    // This listener is called by the "LinkDrawn" and "LinkRelinked" DiagramEvents.
+    function showLinkLabel(e) {
+      var label = e.subject.findObject("LABEL");
+      if (label !== null) label.visible = (e.subject.fromNode.data.figure === "Diamond");
+    }
+
+    // temporary links used by LinkingTool and RelinkingTool are also orthogonal:
+    myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
+    myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
+
+    //load();  // load an initial diagram from some JSON text
+
+    // initialize the Palette that is on the left side of the page
+    myPalette =
+      $(go.Palette, "myPaletteDiv",  // must name or refer to the DIV HTML element
+        {
+          //"animationManager.duration": 800, // slightly longer than default (600ms) animation
+          nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
+          model: new go.GraphLinksModel([  // specify the contents of the Palette
+            { category: "Start", text: "Start" },
+            { text: "Step" },
+            { text: "???", figure: "Diamond" },
+            { category: "End", text: "End" },
+            { category: "Comment", text: "Comment" }
+          ])
+        });
+
+
+    // The following code overrides GoJS focus to stop the browser from scrolling
+    // the page when either the Diagram or Palette are clicked or dragged onto.
+
+    function customFocus() {
+      var x = window.scrollX || window.pageXOffset;
+      var y = window.scrollY || window.pageYOffset;
+      go.Diagram.prototype.doFocus.call(this);
+      window.scrollTo(x, y);
+    }
+
+    myDiagram.doFocus = customFocus;
+    myPalette.doFocus = customFocus;
+
+
+   // end init
+
+  socket.on('flowchartdraw',onFlowchartdraw);
+  // Make all ports on a node visible when the mouse is over the node
+  function showPorts(node, show) {   
+    //socket.emit('flowchartdraw', myDiagram.model.toJson());
+   
+    var diagram = node.diagram;
+    if (!diagram || diagram.isReadOnly || !diagram.allowLink) return;
+    node.ports.each(function(port) {
+        port.stroke = (show ? "white" : null);
+      });
+  }
+
+  function onFlowchartdraw(data) {
+    myDiagram.model=go.Model.fromJson(data);
+  }
+  // Show the diagram's model in JSON format that the user may edit
+  function save() {
+    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+  }
+  function load() {
+    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+  }
+
+}
 
        </script>
 
@@ -394,16 +1211,16 @@ function b64(e){var t="";var n=new Uint8Array(e);var r=n.byteLength;for(var i=0;
 
       </div>
 
-      <div class='right-box' id="chat">
-
-          <ul class='pages' >
-              <li class="chat page">
+      <div class='right-box panel panel-warning ' >
+          <div id='heads-drag' class='panel-heading'> Chat-Box</div>
+          <ul class='pages' id="chat">
+              <li class="chat page panel-body">
                   <div class="chatArea">
                       <ul class="messages"></ul>
                   </div>
                   <input class="inputMessage" placeholder="Type here..."/>
               </li>
-              <li class="login page">
+              <li class="login page panel-body">
                   <div class="form">
                       <h3 class="title">사용할 이름을 적으세요.</h3>
                       <input class="usernameInput" type="text" maxlength="14" />
@@ -515,14 +1332,13 @@ function b64(e){var t="";var n=new Uint8Array(e);var r=n.byteLength;for(var i=0;
 
 <!-- REQUIRED JS SCRIPTS -->
 
-<!-- jQuery 2.2.3 -->
-<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- jQuery 2.2.3 
+<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>-->
 <!-- Bootstrap 3.3.6 -->
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../dist/js/app.min.js"></script>
-
-        <script data-main="../dist/js/config.js" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.min.js"></script>
+       <script data-main="../dist/js/config.js" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.min.js"></script> -
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. Slimscroll is required when using the
